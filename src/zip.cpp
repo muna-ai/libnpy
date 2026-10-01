@@ -145,7 +145,8 @@ std::string npy_inflate(std::string &&bytes) {
         (void)inflateEnd(&strm);
         throw std::runtime_error("Error writing to output stream");
       }
-    } while (strm.avail_out == 0);
+    } while (ret != Z_STREAM_END &&
+             (strm.avail_in > 0 || strm.avail_out == 0));
 
     /* done when inflate() says it's done */
   } while (ret != Z_STREAM_END);
